@@ -64,4 +64,5 @@ jobs:
         cd test-project
         uv run plagentic --help
         uv run plagentic init test-sample
+        cd test-sample
         uv run plagentic list
