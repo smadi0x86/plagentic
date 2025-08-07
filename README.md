@@ -55,8 +55,8 @@ plagentic list teams
 plagentic run <team-name> -t "Your task description"
 
 # Examples
-plagentic run tool-test -t "Execute: whoami"
-plagentic run tool-test -t "Browser: Navigate to https://httpbin.org/get"
+plagentic run team-template -t "Execute: whoami"
+plagentic run team-template -t "Browser: Navigate to https://httpbin.org/get"
 ```
 
 ## Working Tools
@@ -68,7 +68,7 @@ plagentic run tool-test -t "Browser: Navigate to https://httpbin.org/get"
 
 ## Creating Teams
 
-Teams are defined in YAML files in the `teams/` directory. See `teams/tool-test.yaml` for a simple example.
+Teams are defined in YAML files in the `teams/` directory. See `teams/team-template.yaml` for a simple example.
 
 ```yaml
 name: "my-team"
