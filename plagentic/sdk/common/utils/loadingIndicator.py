@@ -65,7 +65,7 @@ class LoadingIndicator:
                     self.thread = threading.Thread(target=self._animate)
                     self.thread.daemon = True
                     self.thread.start()
-                except (RuntimeError, ThreadError):
+                except (RuntimeError, Exception):
                     # If thread creation fails, fall back to simple mode
                     self._animate_simple()
             else:
