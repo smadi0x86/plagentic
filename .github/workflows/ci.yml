@@ -1,0 +1,67 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12"]
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v3
+      with:
+        version: "latest"
+
+    - name: Set up Python ${{ matrix.python-version }}
+      run: uv python install ${{ matrix.python-version }}
+
+    - name: Install dependencies
+      run: |
+        uv sync --all-extras --dev
+        
+    - name: Install Playwright browsers
+      run: |
+        uv run playwright install --with-deps
+
+    - name: Lint with flake8
+      run: |
+        uv run flake8 plagentic --count --select=E9,F63,F7,F82 --show-source --statistics
+        uv run flake8 plagentic --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+
+    - name: Test import structure
+      run: |
+        uv run python -c "
+        try:
+            from plagentic.cli.cli import app
+            from plagentic.sdk.core.agent import Agent
+            print('✓ Core imports successful')
+        except ImportError as e:
+            print(f'✗ Import error: {e}')
+            exit(1)
+        "
+
+    - name: Test CLI help
+      run: |
+        uv run plagentic --help
+
+    - name: Test Docker build
+      run: |
+        docker build -t plagentic-test .
+
+    - name: Test basic CLI functionality (with mock config)
+      run: |
+        mkdir -p test-project
+        cp config-template.yaml test-project/config.yaml
+        cd test-project
+        uv run plagentic --help
+        uv run plagentic init test-sample
+        uv run plagentic list

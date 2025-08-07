@@ -1,0 +1,13 @@
+# Generic
+requests==2.32.3
+urllib3==1.26.20
+pyyaml==6.0.1
+pydantic>=2.0.0
+
+# CLI
+click>=8.0.0
+rich>=13.0.0
+typer>=0.9.0
+
+# Optional
+browser-use>=0.1.40

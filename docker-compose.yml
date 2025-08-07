@@ -1,0 +1,54 @@
+services:
+  plagentic:
+    build: .
+    container_name: plagentic
+    working_dir: /app
+    volumes:
+      - ./workspace:/workspace
+      - ./teams:/app/teams
+      - ./config.yaml:/app/config.yaml
+    environment:
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - SERPER_API_KEY=${SERPER_API_KEY}
+      - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY}
+    ports:
+      # dont mind that, for future web UI
+      - "8080:8080"
+    # keep container up for bash
+    stdin_open: true
+    tty: true
+    # use bash
+    command: /bin/bash
+    # Ensure workspace directory exists
+    depends_on:
+      - workspace-init
+
+  # Helper service to ensure workspace exists
+  workspace-init:
+    image: busybox
+    container_name: plagentic-workspace-init
+    volumes:
+      - ./workspace:/workspace
+    command: mkdir -p /workspace
+    restart: "no"
+
+  plagentic-dev:
+    build: .
+    container_name: plagentic-dev
+    volumes:
+      - .:/app
+      - ./workspace:/workspace
+    environment:
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - SERPER_API_KEY=${SERPER_API_KEY}
+      - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY}
+      - PYTHONPATH=/app
+    ports:
+      - "8081:8080"
+    stdin_open: true
+    tty: true
+    command: /bin/bash
+    depends_on:
+      - workspace-init

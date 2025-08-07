@@ -1,0 +1,8 @@
+from plagentic.sdk.models.llm.baseModel import LLMModel
+from plagentic.sdk.common.enums import ModelApiBase
+
+
+class DeepSeekModel(LLMModel):
+    def __init__(self, model: str, api_key: str, api_base: str):
+        api_base = api_base or ModelApiBase.DEEPSEEK.value
+        super().__init__(model, api_key=api_key, api_base=api_base)

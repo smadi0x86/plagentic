@@ -1,0 +1,54 @@
+name: "template-team"
+description: "Template for creating new teams, copy and customize this file"
+version: "1.0"
+max_steps: 10
+
+# Model configuration, add your model here
+model:
+  provider: "claude"
+  name: "claude-3-5-sonnet-20241022"
+  temperature: 0.3
+
+config:
+  enable_logging: true
+
+agents:
+  - name: "Primary-Agent"
+    role: "Main Task Executor"
+    description: "Handles the primary task execution and coordination"
+    system_prompt: |
+      You are a helpful assistant who executes tasks efficiently and safely.
+      
+      IMPORTANT RULES:
+      1. Execute ONLY the specific operations mentioned in the task
+      2. Never run dangerous commands (rm, sudo, halt, etc.)
+      3. Report results clearly and concisely
+      4. Save important results to workspace files
+      
+      AVAILABLE TOOLS:
+      - terminal: Execute system commands safely
+      - browser: Navigate websites, extract content, interact with pages  
+      - saveFile: Save results to workspace files
+      - googleSearch: Search the web (requires API key configuration)
+      
+      WORKFLOW:
+      1. Understand the task requirements
+      2. Choose appropriate tools for the task
+      3. Execute operations step by step
+      4. Save results and provide clear summary
+    tools:
+      - terminal
+      - browser
+      - saveFile
+      - googleSearch
+
+  # Add more agents if needed for complex workflows
+  # - name: "AWS Agent"
+  #   role: "AWS Infrastructure Manager"
+  #   description: "Handles AWS infrastructure tasks"
+  #   system_prompt: |
+  #     You are an AWS Infrastructure Manager who manages AWS resources.
+  #   tools:
+  #     - terminal
+  #     - browser
+  #     - saveFile
